@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./authContext";
-import "./Register.css";
+import "../Pages/css/Register.css";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -28,119 +28,126 @@ export default function Register() {
   };
 
   return (
-    <div className="register-page">
-      <div className="register-shell">
-        <section className="register-brand-panel">
-          <Link to="/" className="register-logo">
-            <span className="register-cc-logo" aria-hidden="true">
-              <span className="register-cc-shape register-cc-purple"></span>
-              <span className="register-cc-shape register-cc-orange"></span>
-            </span>
+    <main className="register-page">
+      <nav className="register-nav">
+        <Link to="/" className="register-logo">
+          <span className="register-logo-mark">
+            <span className="register-logo-purple">C</span>
+            <span className="register-logo-orange">C</span>
+          </span>
+          <span>Course Connect</span>
+        </Link>
 
-            <span className="register-logo-text">
-              Course <strong>Connect</strong>
-            </span>
-          </Link>
+        <Link to="/" className="register-home-link">
+          ← Home
+        </Link>
+      </nav>
 
-          <div className="register-brand-content">
-            <p className="register-eyebrow">JOIN COURSE CONNECT</p>
+      <section className="register-content">
+        <div className="register-decoration register-decoration-one"></div>
+        <div className="register-decoration register-decoration-two"></div>
 
-            <h1>
-              Learn together.
-              <span>Grow together.</span>
-            </h1>
+        <div className="register-intro">
+          <span className="register-eyebrow">
+            YOUR NEXT CHAPTER STARTS HERE
+          </span>
 
-            <p className="register-brand-description">
-              Create your account and start connecting with classmates, study
-              groups, assignments, and everything you're learning.
-            </p>
+          <h1>
+            Start learning.
+            <span> Grow together.</span>
+          </h1>
 
-            <div className="register-brand-note">
-              <p>
-                Study.
-                <br />
-                Plan.
-                <br />
-                Connect.
-                <br />
-                Succeed.
-              </p>
+          <p>
+            Find your people, build better study habits, and make learning
+            something you look forward to.
+          </p>
+
+          <div className="register-benefits">
+            <div className="register-benefit">
+              <span className="register-benefit-icon">✦</span>
+              <span>Connect with study groups</span>
+            </div>
+
+            <div className="register-benefit">
+              <span className="register-benefit-icon">✓</span>
+              <span>Keep track of assignments</span>
+            </div>
+
+            <div className="register-benefit">
+              <span className="register-benefit-icon">♡</span>
+              <span>Learn better, together</span>
             </div>
           </div>
+        </div>
 
-          <div className="register-decoration" aria-hidden="true">
-            <span className="register-decoration-card purple">✦</span>
-
-            <span className="register-decoration-card orange">✓</span>
-
-            <span className="register-decoration-card yellow">+</span>
-          </div>
-        </section>
-
-        <section className="register-form-panel">
-          <div className="register-form-wrapper">
-            <p className="register-form-eyebrow">GET STARTED</p>
-
+        <div className="register-card">
+          <div className="register-card-heading">
+            <span className="register-card-icon">✦</span>
+            <p className="register-card-eyebrow">WELCOME TO THE COMMUNITY</p>
             <h2>Create your account</h2>
-
-            <p className="register-form-intro">
-              Join Course Connect and build your learning space.
+            <p className="register-card-description">
+              Set up your account to get started.
             </p>
-
-            <form className="register-form" onSubmit={onRegister}>
-              <label>
-                Username
-                <input
-                  type="text"
-                  name="username"
-                  placeholder="Choose a username"
-                  autoComplete="username"
-                  required
-                />
-              </label>
-
-              <label>
-                Email
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Enter your email"
-                  autoComplete="email"
-                  required
-                />
-              </label>
-
-              <label>
-                Password
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Create a password"
-                  autoComplete="new-password"
-                  required
-                />
-              </label>
-
-              {error && <p className="register-error">{error}</p>}
-
-              <button type="submit">
-                Create Account
-                <span>→</span>
-              </button>
-            </form>
-
-            <div className="register-login">
-              <p>Already have an account?</p>
-
-              <Link to="/Login">Sign in →</Link>
-            </div>
           </div>
 
-          <footer className="register-footer">
-            Course Connect • Learn together. Go further.
-          </footer>
-        </section>
-      </div>
-    </div>
+          <form className="register-form" onSubmit={onRegister}>
+            <label className="register-label">
+              Username
+              <input
+                type="text"
+                name="username"
+                placeholder="Choose a username"
+                autoComplete="username"
+                required
+              />
+            </label>
+
+            <label className="register-label">
+              Email address
+              <input
+                type="email"
+                name="email"
+                placeholder="you@example.com"
+                autoComplete="email"
+                required
+              />
+            </label>
+
+            <label className="register-label">
+              Password
+              <input
+                type="password"
+                name="password"
+                placeholder="Create a password"
+                autoComplete="new-password"
+                required
+              />
+            </label>
+
+            {error && (
+              <p className="register-error" role="alert">
+                {error}
+              </p>
+            )}
+
+            <button type="submit" className="register-button">
+              Create account <span>→</span>
+            </button>
+          </form>
+
+          <div className="register-divider">
+            <span>ALREADY PART OF THE COMMUNITY?</span>
+          </div>
+
+          <p className="register-footer">
+            Already have an account? <Link to="/Login">Log in here</Link>
+          </p>
+        </div>
+      </section>
+
+      <footer className="register-page-footer">
+        Made for learners, built for connection.
+      </footer>
+    </main>
   );
 }

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "./Study.css";
+import "../Pages/css/study.css";
 
 export default function Study() {
   return (

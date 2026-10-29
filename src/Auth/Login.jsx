@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./authContext";
-import "./Login.css";
+import "../Pages/css/Login.css";
 
 export default function Login() {
   const { login } = useAuth();
@@ -25,108 +25,113 @@ export default function Login() {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-shell">
-        <section className="login-brand-panel">
-          <Link to="/" className="login-logo">
-            <span className="login-cc-logo" aria-hidden="true">
-              <span className="login-cc-shape login-cc-purple"></span>
-              <span className="login-cc-shape login-cc-orange"></span>
-            </span>
+    <main className="login-page">
+      <nav className="login-nav">
+        <Link to="/" className="login-logo">
+          <span className="login-logo-mark">
+            <span className="login-logo-purple">C</span>
+            <span className="login-logo-orange">C</span>
+          </span>
+          <span>Course Connect</span>
+        </Link>
 
-            <span className="login-logo-text">
-              Course <strong>Connect</strong>
-            </span>
-          </Link>
+        <Link to="/" className="login-home-link">
+          ← Home
+        </Link>
+      </nav>
 
-          <div className="login-brand-content">
-            <p className="login-eyebrow">WELCOME BACK</p>
+      <section className="login-content">
+        <div className="login-decoration login-decoration-one"></div>
+        <div className="login-decoration login-decoration-two"></div>
 
-            <h1>
-              Study together.
-              <span>Go further.</span>
-            </h1>
+        <div className="login-intro">
+          <span className="login-eyebrow">WELCOME BACK</span>
 
-            <p className="login-brand-description">
-              Sign in to reconnect with your study groups, assignments, and
-              learning space.
+          <h1>
+            Your next big
+            <span> idea awaits.</span>
+          </h1>
+
+          <p>
+            Pick up where you left off, connect with your study groups, and keep
+            making progress toward your goals.
+          </p>
+
+          <div className="login-benefits">
+            <div className="login-benefit">
+              <span className="login-benefit-icon">✦</span>
+              <span>Return to your study groups</span>
+            </div>
+
+            <div className="login-benefit">
+              <span className="login-benefit-icon">✓</span>
+              <span>Stay on top of assignments</span>
+            </div>
+
+            <div className="login-benefit">
+              <span className="login-benefit-icon">♡</span>
+              <span>Keep learning together</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="login-card">
+          <div className="login-card-heading">
+            <span className="login-card-icon">✦</span>
+            <p className="login-card-eyebrow">YOUR LEARNING SPACE</p>
+            <h2>Welcome back!</h2>
+            <p className="login-card-description">
+              Sign in to continue your learning journey.
             </p>
+          </div>
 
-            <div className="login-brand-note">
-              <p>
-                Study.
-                <br />
-                Plan.
-                <br />
-                Connect.
-                <br />
-                Succeed.
+          <form className="login-form" onSubmit={onLogin}>
+            <label className="login-label">
+              Email address
+              <input
+                type="email"
+                name="email"
+                placeholder="you@example.com"
+                autoComplete="email"
+                required
+              />
+            </label>
+
+            <label className="login-label">
+              Password
+              <input
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                autoComplete="current-password"
+                required
+              />
+            </label>
+
+            {error && (
+              <p className="login-error" role="alert">
+                {error}
               </p>
-            </div>
+            )}
+
+            <button type="submit" className="login-button">
+              Sign in <span>→</span>
+            </button>
+          </form>
+
+          <div className="login-divider">
+            <span>GREAT TO HAVE YOU HERE</span>
           </div>
 
-          <div className="login-decoration" aria-hidden="true">
-            <span className="login-decoration-card purple">✦</span>
+          <p className="login-footer">
+            Need an account? <Link to="/Register">Create one here</Link>
+          </p>
+        </div>
+      </section>
 
-            <span className="login-decoration-card orange">✓</span>
-
-            <span className="login-decoration-card yellow">+</span>
-          </div>
-        </section>
-
-        <section className="login-form-panel">
-          <div className="login-form-wrapper">
-            <p className="login-form-eyebrow">YOUR LEARNING SPACE</p>
-
-            <h2>Continue learning</h2>
-
-            <p className="login-form-intro">
-              Enter your account information to sign in.
-            </p>
-
-            <form className="login-form" onSubmit={onLogin}>
-              <label>
-                Email
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Enter your email"
-                  autoComplete="email"
-                  required
-                />
-              </label>
-
-              <label>
-                Password
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Enter your password"
-                  autoComplete="current-password"
-                  required
-                />
-              </label>
-
-              {error && <p className="login-error">{error}</p>}
-
-              <button type="submit">
-                Sign In
-                <span>→</span>
-              </button>
-            </form>
-
-            <div className="login-register">
-              <p>New to Course Connect?</p>
-
-              <Link to="/Register">Create an account →</Link>
-            </div>
-          </div>
-
-          <footer className="login-footer">
-            Course Connect • Learn together. Go further.
-          </footer>
-        </section>
-      </div>
-    </div>
+      <footer className="login-page-footer">
+        Made for learners, built for connection.
+      </footer>
+    </main>
   );
 }

@@ -111,17 +111,17 @@ export async function deleteAssignment(assignment_id) {
   return assignment;
 }
 
-export async function getAssignmentsByGroupId(groupId) {
-  const sql = `
-    SELECT *
-    FROM assignments
-    WHERE group_id = $1
-    ORDER BY due_date ASC NULLS LAST
-  `;
+// export async function getAssignmentsByGroupId(groupId) {
+//   const sql = `
+//     SELECT *
+//     FROM assignments
+//     WHERE group_id = $1
+//     ORDER BY due_date ASC NULLS LAST
+//   `;
 
-  const { rows } = await db.query(sql, [groupId]);
-  return rows;
-}
+//   const { rows } = await db.query(sql, [groupId]);
+//   return rows;
+// }
 
 export async function getAssignmentsByUserId(userId) {
   const sql = `

@@ -7,7 +7,7 @@ import groupsRouter from "./api/groups.js";
 import usersRouter from "./api/users.js";
 import assignmentsRouter from "./api/assignments.js";
 import postsRouter from "./api/posts.js";
-import cors from "cors";
+
 const app = express();
 app.use(cors({ origin: ["http://localhost:5173", "http://localhost:5174"] }));
 app.use(express.json());

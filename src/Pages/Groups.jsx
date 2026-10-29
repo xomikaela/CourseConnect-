@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../Auth/authContext";
-import "./Groups.css";
+import "../Pages/css/groups.css";
 
 const API = import.meta.env.VITE_API;
 
@@ -11,20 +11,18 @@ export default function Groups() {
   const [groups, setGroups] = useState([]);
   const [groupTitle, setGroupTitle] = useState("");
   const [groupDescription, setGroupDescription] = useState("");
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Load all public groups, whether the visitor is logged in or not.
   useEffect(() => {
     async function getGroups() {
       try {
         setLoading(true);
         setError("");
 
-        const response = await fetch(`${API}/groups`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(`${API}/groups/browse`);
 
         if (!response.ok) {
           const message = await response.text();
@@ -41,13 +39,16 @@ export default function Groups() {
       }
     }
 
-    if (token) {
-      getGroups();
-    }
-  }, [token]);
+    getGroups();
+  }, []);
 
   async function handleCreateGroup(event) {
     event.preventDefault();
+
+    if (!token) {
+      setError("Please log in to create a study group.");
+      return;
+    }
 
     try {
       setError("");
@@ -71,8 +72,8 @@ export default function Groups() {
 
       const newGroup = await response.json();
 
+      // Add the new group to the displayed list.
       setGroups((currentGroups) => [...currentGroups, newGroup]);
-
       setGroupTitle("");
       setGroupDescription("");
     } catch (error) {
@@ -80,6 +81,10 @@ export default function Groups() {
       setError(error.message);
     }
   }
+
+  const filteredGroups = groups.filter((group) =>
+    group.group_title.toLowerCase().includes(search.trim().toLowerCase()),
+  );
 
   return (
     <div className="groups-page">
@@ -99,44 +104,24 @@ export default function Groups() {
           <Link to="/" className="groups-nav-link">
             Home
           </Link>
-
-          <Link to="/Groups" className="groups-nav-link active">
-            Groups
-          </Link>
-
           <Link to="/Study" className="groups-nav-link">
             Study
           </Link>
-
+          <Link to="/Groups" className="groups-nav-link active">
+            Groups
+          </Link>
           <Link to="/Assignments" className="groups-nav-link">
             Assignments
-          </Link>
-
-          <Link to="/Profile" className="groups-nav-link">
-            Profile
           </Link>
         </nav>
 
         <div className="groups-nav-actions">
-          <div className="groups-search-small">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="11" cy="11" r="6"></circle>
-              <path d="m16 16 4 4"></path>
-            </svg>
-
-            <input
-              type="search"
-              placeholder="Search..."
-              aria-label="Search Course Connect"
-            />
-          </div>
-
           <Link
             to="/Profile"
             className="groups-profile-circle"
-            aria-label="Profile"
+            aria-label="View profile"
           >
-            M
+            👤
           </Link>
         </div>
       </header>
@@ -193,15 +178,20 @@ export default function Groups() {
               </div>
             </div>
 
-            <form className="groups-search-form">
+            <form
+              className="groups-search-form"
+              onSubmit={(event) => event.preventDefault()}
+            >
               <input
                 name="search"
                 type="search"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search for a group..."
-                aria-label="Search for group"
+                aria-label="Search for a group"
               />
 
-              <button type="button">Search</button>
+              <button type="submit">Search</button>
             </form>
           </div>
 
@@ -219,59 +209,71 @@ export default function Groups() {
               </div>
             </div>
 
-            <form className="groups-create-form" onSubmit={handleCreateGroup}>
-              <label>
-                Group name
-                <input
-                  value={groupTitle}
-                  onChange={(event) => setGroupTitle(event.target.value)}
-                  placeholder="Enter group name..."
-                  required
-                />
-              </label>
+            {token ? (
+              <form className="groups-create-form" onSubmit={handleCreateGroup}>
+                <label>
+                  Group name
+                  <input
+                    value={groupTitle}
+                    onChange={(event) => setGroupTitle(event.target.value)}
+                    placeholder="Enter group name..."
+                    required
+                  />
+                </label>
 
-              <label>
-                Group description
-                <input
-                  value={groupDescription}
-                  onChange={(event) => setGroupDescription(event.target.value)}
-                  placeholder="What will your group study?"
-                  required
-                />
-              </label>
+                <label>
+                  Group description
+                  <input
+                    value={groupDescription}
+                    onChange={(event) =>
+                      setGroupDescription(event.target.value)
+                    }
+                    placeholder="What will your group study?"
+                    required
+                  />
+                </label>
 
-              <button type="submit">
-                Create Group
-                <span>→</span>
-              </button>
-            </form>
+                <button type="submit">
+                  Create Group <span>→</span>
+                </button>
+              </form>
+            ) : (
+              <p className="groups-status">
+                Please <Link to="/Login">log in</Link> to create a study group.
+              </p>
+            )}
           </div>
         </section>
 
-        {error && <div className="groups-error">{error}</div>}
+        {error && (
+          <div className="groups-error" role="alert">
+            {error}
+          </div>
+        )}
 
         <section className="my-groups-section">
           <div className="my-groups-heading">
             <div>
               <p>YOUR COMMUNITY</p>
-              <h2>My Groups</h2>
+              <h2>Study Groups</h2>
             </div>
 
             <span className="group-count">
-              {groups.length} {groups.length === 1 ? "group" : "groups"}
+              {filteredGroups.length}{" "}
+              {filteredGroups.length === 1 ? "group" : "groups"}
             </span>
           </div>
 
           {loading && (
             <div className="groups-status">
-              <p>Loading your groups...</p>
+              <p>Loading study groups...</p>
             </div>
           )}
 
-          {!loading && !error && groups.length === 0 && (
+          {!loading && !error && filteredGroups.length === 0 && (
             <div className="groups-empty-state">
-              <span className="groups-empty-icon">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
+              <span className="groups-empty-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
                   <circle cx="9" cy="8" r="3"></circle>
                   <circle cx="17" cy="9" r="2"></circle>
                   <path d="M3 19c0-3 2.7-5 6-5s6 2 6 5"></path>
@@ -280,18 +282,26 @@ export default function Groups() {
               </span>
 
               <div>
-                <h3>Your groups will appear here</h3>
-                <p>Create your first group and start studying together.</p>
+                <h3>
+                  {search.trim()
+                    ? "No matching groups found"
+                    : "No study groups yet"}
+                </h3>
+                <p>
+                  {search.trim()
+                    ? "Try another group name or clear your search."
+                    : "Be the first to create a group and start studying together."}
+                </p>
               </div>
             </div>
           )}
 
-          {!loading && groups.length > 0 && (
+          {!loading && filteredGroups.length > 0 && (
             <div className="groups-grid">
-              {groups.map((group) => (
+              {filteredGroups.map((group) => (
                 <article className="group-card" key={group.group_id}>
-                  <div className="group-card-icon">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <div className="group-card-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
                       <circle cx="9" cy="8" r="3"></circle>
                       <circle cx="17" cy="9" r="2"></circle>
                       <path d="M3 19c0-3 2.7-5 6-5s6 2 6 5"></path>
@@ -301,20 +311,17 @@ export default function Groups() {
 
                   <div className="group-card-content">
                     <p className="group-label">STUDY GROUP</p>
-
                     <h3>{group.group_title}</h3>
-
                     <p className="group-description">
                       {group.group_description}
                     </p>
                   </div>
 
                   <Link
-                    to={`/Assignments?groupId=${group.group_id}`}
+                    to={`/Groups/${group.group_id}`}
                     className="group-card-link"
                   >
-                    View Assignments
-                    <span>→</span>
+                    View group <span>→</span>
                   </Link>
                 </article>
               ))}
@@ -324,7 +331,6 @@ export default function Groups() {
 
         <footer className="groups-footer">
           <span>Course Connect</span>
-
           <p>Study • Plan • Connect • Succeed</p>
         </footer>
       </main>
